@@ -1,0 +1,47 @@
+
+ROM used: 109 (1%)
+          109 (1%) including unused fragments
+
+          0 Average locations per line
+          3 Average locations per statement
+
+RAM used: 6 (2%) at main() level
+          7 (2%) worst case
+
+Stack used: 1 worst case (out of 8 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   66    33 100  PWM Modu Uygulamasý-1.c
+  302     0   0  ..\..\..\..\Program Files (x86)\PICC\Devices\16f877.h
+----- -----
+  368    33 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     21  19   1             @delay_ms1
+0     84  77   0   785  5.3  main
+ Inline        0             @cinit1
+
+Program metrics:
+    Functions               1
+    Statements              33
+    Comments                104
+    Volume (V)              790
+    Difficulty (D)          5.1
+    Effort to implement (E) 4059
+    Time to implement (T)   4 minutes
+    Est Delivered Bugs (B)  0
+    Cyclomatic Complexity   4
+    Maintainability (MI)    74
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-007FF   105  1939  
+00800-00FFF     0  2048  
+01000-017FF     0  2048  
+01800-01FFF     0  2048  
+
+
+

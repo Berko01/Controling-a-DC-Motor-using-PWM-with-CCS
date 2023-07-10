@@ -1,0 +1,192 @@
+CCS PCM C Compiler, Version 4.130, 51838               02-Oca-21 15:01
+
+               Filename: C:\Users\ErhanSesli\Desktop\17_PWM_UYGULAMASI\PWM Modu Uygulamasý-1.lst
+
+               ROM used: 109 words (1%)
+                         Largest free fragment is 2048
+               RAM used: 6 (2%) at main() level
+                         7 (2%) worst case
+               Stack:    1 locations
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   019
+0003:  NOP
+.................... /****************************************************** 
+....................       PIC16F877 ile PWM Modu Uygulamasý-1 
+.................... *******************************************************/ 
+.................... #include <16f877.h>     // Kullanýlacak denetleyicinin baþlýk dosyasý tanýtýlýyor. 
+.................... //////// Standard Header file for the PIC16F877 device //////////////// 
+.................... #device PIC16F877 
+.................... #list 
+....................  
+....................  
+.................... // Denetleyici konfigürasyon ayarlarý 
+.................... #fuses XT,NOWDT,NOPROTECT,NOBROWNOUT,NOLVP,NOPUT,NOWRT,NODEBUG,NOCPD 
+....................  
+.................... #use delay (clock=4000000) // Gecikme fonksiyonu için kullanýlacak osilatör frekansý belirtiliyor. 
+0004:  MOVLW  21
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   018
+000A:  MOVLW  01
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  4A
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  GOTO   016
+0016:  DECFSZ 00,F
+0017:  GOTO   00A
+0018:  RETURN
+....................  
+.................... #use fast_io(a) //Port yönlendirme komutlarý A portu için geçerli 
+.................... #use fast_io(c) //Port yönlendirme komutlarý C portu için geçerli 
+....................  
+.................... int i=5; // Tamsayý tipinde deðiþken tanýmlanýyor 
+....................  
+.................... /********* ANA PROGRAM FONKSÝYONU********/ 
+....................  
+.................... void main ( ) 
+.................... { 
+0019:  CLRF   04
+001A:  BCF    03.7
+001B:  MOVLW  1F
+001C:  ANDWF  03,F
+001D:  MOVLW  05
+001E:  MOVWF  20
+001F:  BSF    03.5
+0020:  BSF    1F.0
+0021:  BSF    1F.1
+0022:  BSF    1F.2
+0023:  BCF    1F.3
+....................    setup_psp(PSP_DISABLED);        // PSP birimi devre dýþý 
+0024:  BCF    09.4
+....................    setup_timer_1(T1_DISABLED);     // T1 zamanlayýcýsý devre dýþý 
+0025:  BCF    03.5
+0026:  CLRF   10
+....................    setup_adc_ports(NO_ANALOGS);    // ANALOG giriþ yok 
+0027:  BSF    03.5
+0028:  BSF    1F.0
+0029:  BSF    1F.1
+002A:  BSF    1F.2
+002B:  BCF    1F.3
+....................    setup_adc(ADC_OFF);             // ADC birimi devre dýþý 
+002C:  BCF    03.5
+002D:  BCF    1F.0
+....................  
+....................    set_tris_a(0x03);   // RA0 ve RA1 pinleri giriþ 
+002E:  MOVLW  03
+002F:  BSF    03.5
+0030:  MOVWF  05
+....................    set_tris_c(0x00);   // RC0, RC1 ve RC2 pini giriþ 
+0031:  MOVLW  00
+0032:  MOVWF  07
+....................  
+....................    setup_ccp1(CCP_PWM);  // CCP1 birimi PWM çýkýþý için ayarlandý 
+0033:  BCF    03.5
+0034:  BCF    07.2
+0035:  MOVLW  0C
+0036:  MOVWF  17
+....................    setup_ccp2(CCP_PWM);  // CCP2 birimi PWM çýkýþý için ayarlandý 
+0037:  BCF    07.1
+0038:  MOVWF  1D
+....................  
+....................    setup_timer_2(T2_DIV_BY_4,249,1); // Timer2 ayarlarý yapýlýyor 
+0039:  MOVLW  00
+003A:  MOVWF  78
+003B:  IORLW  05
+003C:  MOVWF  12
+003D:  MOVLW  F9
+003E:  BSF    03.5
+003F:  MOVWF  12
+....................  
+....................    set_pwm1_duty(i); // PWM1 çýkýþý görev saykýlý belirleniyor 
+0040:  BCF    03.5
+0041:  MOVF   20,W
+0042:  MOVWF  15
+....................    set_pwm2_duty(i); // PWM2 çýkýþý görev saykýlý belirleniyor 
+0043:  MOVF   20,W
+0044:  MOVWF  1B
+....................  
+....................    while(1) // Sonsuz döngü 
+....................    { 
+....................       if (input(pin_a0)) // Eðer RA0 giriþine baðlý butona basýlýrsa 
+0045:  BTFSS  05.0
+0046:  GOTO   058
+....................       { 
+....................          delay_ms(20);   // Buton arký önleme gecikmesi 
+0047:  MOVLW  14
+0048:  MOVWF  21
+0049:  CALL   004
+....................          while(input(pin_a0)); // Basýlý butondan el çekile kadar bekle 
+004A:  BTFSC  05.0
+004B:  GOTO   04A
+....................          i+=3; // i=i+3 anlamýndadýr. 
+004C:  MOVLW  03
+004D:  ADDWF  20,F
+....................  
+....................          if (i>=170) // i deðeri 170'dan büyükse i deðeri 170 olsun 
+004E:  MOVF   20,W
+004F:  SUBLW  A9
+0050:  BTFSC  03.0
+0051:  GOTO   054
+....................             i=170; 
+0052:  MOVLW  AA
+0053:  MOVWF  20
+....................  
+....................          set_pwm1_duty(i); // PWM1 çýkýþý görev saykýlý belirleniyor 
+0054:  MOVF   20,W
+0055:  MOVWF  15
+....................          set_pwm2_duty(i); // PWM2 çýkýþý görev saykýlý belirleniyor 
+0056:  MOVF   20,W
+0057:  MOVWF  1B
+....................       } 
+....................  
+....................       if (input(pin_a1)) // Eðer RA1 giriþine baðlý butona basýlýrsa 
+0058:  BTFSS  05.1
+0059:  GOTO   06B
+....................       { 
+....................          delay_ms(20);  // Buton arký önleme gecikmesi 
+005A:  MOVLW  14
+005B:  MOVWF  21
+005C:  CALL   004
+....................          while(input(pin_a1)); // Basýlý butondan el çekile kadar bekle 
+005D:  BTFSC  05.1
+005E:  GOTO   05D
+....................          i-=3;  // i=i-3 anlamýndadýr. 
+005F:  MOVLW  03
+0060:  SUBWF  20,F
+....................  
+....................          if (i<5) // i deðeri 5'den küçük ise i deðeri 10 olsun 
+0061:  MOVF   20,W
+0062:  SUBLW  04
+0063:  BTFSS  03.0
+0064:  GOTO   067
+....................             i=5; 
+0065:  MOVLW  05
+0066:  MOVWF  20
+....................  
+....................          set_pwm1_duty(i); // PWM1 çýkýþý görev saykýlý belirleniyor 
+0067:  MOVF   20,W
+0068:  MOVWF  15
+....................          set_pwm2_duty(i); // PWM2 çýkýþý görev saykýlý belirleniyor 
+0069:  MOVF   20,W
+006A:  MOVWF  1B
+....................       } 
+....................    } 
+006B:  GOTO   045
+.................... } 
+....................  
+006C:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F39   XT NOWDT NOPUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT
